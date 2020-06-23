@@ -1,0 +1,116 @@
+<html>
+  <head>
+    <title>Colors - Pretty Cool Link</title>
+    <style>
+    #page {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      
+      align-items: center;
+      justify-content: center;
+    }
+
+    .color-input {
+      font-size: 5rem;
+      text-align: right;
+    }
+
+    .color-input input {
+      width: 20rem;
+      background: none;
+      border: none;
+      
+      margin: 0;
+      padding: 0;
+      
+      font-size: 5rem;
+      text-align: left;
+    }
+
+    .color-input input:focus {
+      outline: none;
+    }
+
+    .light-text {
+      color: rgba(255, 255, 255, 1.0);
+    }
+
+    .light-text::selection {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-text {
+      color: rgba(0, 0, 0, 1.0);
+    }
+
+    .dark-text::selection {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    </style>
+  </head>
+  <body id="page">
+    <div class="color-input">
+      <input type="text" spellcheck="false" />
+    </div>
+    <script type="text/javascript">
+    const page = document.querySelector("#page");
+    const color = document.querySelector(".color-input input");
+
+    function setBackgroundColor(color) {
+      if (!color.startsWith('#')) {
+        color = `#${color}`;
+      }
+      
+      if (color.length === 4 || color.length === 7) {
+        console.log(color);
+        page.style.backgroundColor = color;
+        setInputColors(color);
+      }
+    }
+
+    function setInputColors(hex) {
+      if (hex.indexOf('#') === 0) {
+        hex = hex.slice(1);
+      }
+      
+      if (hex.length === 3) {
+        const [r, g, b] = hex;
+        hex = r + r + g + g + b + b;
+      }
+      
+      const r = parseInt(hex.slice(0, 2), 16);
+      const g = parseInt(hex.slice(2, 4), 16);
+      const b = parseInt(hex.slice(4, 6), 16);
+      
+      const contrast = (r * 0.299 + g * 0.587 + b * 0.114);
+      
+      
+      if(contrast < 186) {
+        color.classList.remove('dark-text');
+        color.classList.add('light-text');
+      } else {
+        color.classList.remove('light-text');
+        color.classList.add('dark-text');
+      }
+    }
+
+    color.addEventListener('input', (e) => {
+      const userColor = e.target.value;
+      console.log(userColor);
+      if (!userColor.startsWith('#')) {
+        color.value = `#${userColor}`;
+      }
+      
+      setBackgroundColor(userColor);
+    });
+
+    const startColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    setBackgroundColor(startColor);
+    color.value = startColor;
+    </script>
+  </body>
+</html>
